@@ -8,9 +8,9 @@ public class Character
     public string Name;
     public string CharaName;
     public int Hp;
-    public int Mp;
+    public float Mp;
 
-    public Character(string name, string charaName, int hp, int mp)
+    public Character(string name, string charaName, int hp, float mp)
     {
         Name = name;
         CharaName = charaName;

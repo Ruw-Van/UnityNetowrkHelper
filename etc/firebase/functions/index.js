@@ -7,6 +7,12 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const { FieldValue } = require('firebase-admin/firestore');
+admin.initializeApp();
+const firestore = admin.firestore();
+
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 
@@ -17,3 +23,19 @@ const logger = require("firebase-functions/logger");
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+exports.JsonImport = onRequest(async (req, res) => {
+	if (req.method !== 'POST') {
+		res.status(405).send('Method Not Allowed');
+		return;
+	}
+
+	try {
+        console.log(req.body);
+        await firestore.collection("json").doc().set(req.body);
+		res.status(200).send(`{ "ResultCode" : 0, "Message" : "OK" }`);
+	} catch (error) {
+		console.error('Error processing webhook:', error);
+		res.status(500).send(`{ "ResultCode" : 1, "Message" : "Internal Server Error" }`);
+	}
+});

@@ -8,13 +8,13 @@ public static class HttpClientWrapper
 {
     private static readonly HttpClient _httpClient = new HttpClient();
 
-    private static async Task<string> SendRequest(string requestUrl, HttpMethod method, string payload = null)
+    private static async Task<string> SendRequest(string requestUrl, HttpMethod method, string payload = null, string contentType = "application/x-www-form-urlencoded")
     {
         using (var request = new HttpRequestMessage(method, requestUrl))
         {
             if (method == HttpMethod.Post && payload != null)
             {
-                request.Content = new StringContent(payload, Encoding.UTF8, "application/x-www-form-urlencoded");
+                request.Content = new StringContent(payload, Encoding.UTF8, contentType);
             }
 
             try
@@ -36,5 +36,5 @@ public static class HttpClientWrapper
     }
 
     public static Task<string> Get(string requestUrl) => SendRequest(requestUrl, HttpMethod.Get);
-    public static Task<string> Post(string requestUrl, string payload) => SendRequest(requestUrl, HttpMethod.Post, payload);
+    public static Task<string> Post(string requestUrl, string payload, string contentType = "application/x-www-form-urlencoded") => SendRequest(requestUrl, HttpMethod.Post, payload, contentType);
 }

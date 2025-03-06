@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public static class UnityHttpHelper
 {
-    private static async Task<string> SendRequest(string requestUrl, string method, string payload = null)
+    private static async Task<string> SendRequest(string requestUrl, string method, string payload = null, string contentType = "application/x-www-form-urlencoded")
     {
         using (UnityWebRequest request = new UnityWebRequest(requestUrl, method))
         {
@@ -13,7 +13,7 @@ public static class UnityHttpHelper
             {
                 byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(payload);
                 request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.SetRequestHeader("Content-Type", contentType);
             }
             
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -41,5 +41,5 @@ public static class UnityHttpHelper
     }
 
     public static Task<string> Get(string requestUrl) => SendRequest(requestUrl, UnityWebRequest.kHttpVerbGET);
-    public static Task<string> Post(string requestUrl, string payload) => SendRequest(requestUrl, UnityWebRequest.kHttpVerbPOST, payload);
+    public static Task<string> Post(string requestUrl, string payload, string contentType = "application/x-www-form-urlencoded") => SendRequest(requestUrl, UnityWebRequest.kHttpVerbPOST, payload, contentType);
 }
